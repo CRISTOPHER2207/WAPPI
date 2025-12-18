@@ -1,0 +1,100 @@
+<div class="app-container">
+
+  <header class="top-header">
+    <div class="user-info">
+      <div class="avatar">
+        <img src="https://i.pravatar.cc/150?img=12" alt="Profile">
+      </div>
+      <div class="texts">
+        <span class="welcome">Bienvenido de nuevo,</span>
+        <h3 class="username">Cristopher Jans</h3>
+      </div>
+    </div>
+    <button class="icon-btn notification">
+      <i class='bx bx-bell'></i>
+      <span class="dot"></span>
+    </button>
+  </header>
+
+  <div class="search-section">
+    <div class="search-bar">
+      <i class='bx bx-search'></i>
+      <input type="text" placeholder="Buscar prendas...">
+    </div>
+    <button class="filter-btn">
+      <i class='bx bx-slider-alt'></i>
+    </button>
+  </div>
+
+  <div class="promo-banner">
+    <div class="promo-content">
+      <span class="tag">NUEVA COLECCIÓN</span>
+      <h2>Oferta de Verano</h2>
+      <p>Descuentos del <span class="highlight">50%</span></p>
+      <button class="promo-btn">Ver Ahora <i class='bx bx-right-arrow-alt'></i></button>
+    </div>
+    <div class="promo-image">
+      <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Model">
+    </div>
+  </div>
+
+  <div class="categories-scroll">
+    <button
+      class="category-pill"
+      *ngFor="let cat of categories"
+      [class.active]="cat === selectedCategory">
+      {{ cat }}
+      <span class="dot" *ngIf="cat === selectedCategory"></span>
+    </button>
+  </div>
+
+  <div class="section-header">
+    <h3>Populares</h3>
+    <a href="#" class="view-all">Ver todo</a>
+  </div>
+
+  <div class="product-grid">
+    <div class="product-card" *ngFor="let p of products">
+      <button class="favorite-btn">
+        <i class='bx bx-heart'></i>
+      </button>
+
+      <div class="image-wrapper">
+        <img [src]="p.imageUrl" [alt]="p.name">
+      </div>
+
+      <div class="card-details">
+        <h4>{{ p.name }}</h4>
+        <div class="bottom-row">
+          <span class="price">S/ {{ p.price }}</span>
+          <button class="add-btn">
+            <i class='bx bx-plus'></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <nav class="bottom-nav">
+    <a href="#" class="nav-item">
+      <i class='bx bx-home-alt-2'></i>
+    </a>
+    <a href="#" class="nav-item">
+      <i class='bx bx-play-circle'></i>
+    </a>
+    <a href="#" class="nav-item active"> <i class='bx bx-store-alt'></i>
+    </a>
+    <a href="#" class="nav-item">
+      <i class='bx bx-layer'></i>
+    </a>
+    <a href="#" class="nav-item">
+      <i class='bx bx-closet'></i>
+    </a>
+    <a href="#" class="nav-item">
+      <i class='bx bx-user'></i>
+    </a>
+  </nav>
+
+</div>

@@ -1,0 +1,34 @@
+<div class="reels-container">
+  <div class="reel-screen" *ngFor="let reel of reels">
+
+    <video [src]="reel.videoUrl" autoplay loop muted playsinline class="video-player"></video>
+
+    <div class="overlay"></div>
+
+    <div class="actions-sidebar">
+        <div class="action-btn">
+            <i class='bx bxs-heart'></i>
+            <span>Like</span>
+        </div>
+        <div class="action-btn">
+            <i class='bx bxs-message-rounded-dots'></i>
+            <span>Comentar</span>
+        </div>
+        <div class="action-btn">
+            <i class='bx bxs-share'></i>
+            <span>Compartir</span>
+        </div>
+    </div>
+
+    <div class="bottom-info">
+      <h3 class="username">@wappi_style</h3>
+      <p class="description">{{ reel.description }}</p>
+      <div class="tags"> Let's go #{{ reel.fashionType }} #OOTD</div>
+
+      <button class="shop-look-btn" (click)="goToCreator(reel.taggedProducts)">
+        <i class='bx bx-layer' ></i> Probar este Outfit ({{reel.taggedProducts.length}} prendas)
+      </button>
+    </div>
+
+  </div>
+</div>
