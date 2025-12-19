@@ -14,7 +14,7 @@ public class DataSeeder implements CommandLineRunner {
     private final ProductRepository productRepository;
     private final ReelRepository reelRepository;
     
-    // Tu servidor local
+    // Tu servidor local (Asegúrate de que Spring Boot corra en el puerto 8080)
     private final String SERVER = "http://localhost:8080";
 
     public DataSeeder(ProductRepository productRepository, ReelRepository reelRepository) {
@@ -24,11 +24,15 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Limpiamos todo para empezar de cero
+        // 1. Limpiamos la base de datos previa para evitar duplicados
         reelRepository.deleteAll();
         productRepository.deleteAll();
 
-        // 1. CREAR PRODUCTO 1 (Polo)
+        // -----------------------------------------------------------
+        // 2. CREAR PRODUCTOS
+        // -----------------------------------------------------------
+
+        // Producto 1: Polo
         Product p1 = new Product();
         p1.setName("Polo Oversize Graphic");
         p1.setDescription("Algodón 100%, estampado DTG de alta calidad.");
@@ -37,11 +41,11 @@ public class DataSeeder implements CommandLineRunner {
         p1.setFashionType("URBAN"); 
         p1.setSizes("S,M,L,XL");
         
-        // AQUÍ ESTÁ LA CORRECCIÓN: Usamos los nuevos nombres
-        p1.setDisplayImageUrl(SERVER + "/images/display/polo_model.jpg"); 
-        p1.setTransparentImageUrl(SERVER + "/images/transparent/polo_png.png"); 
+        // Apuntamos a las imágenes que SÍ existen en tu carpeta static/images
+        p1.setDisplayImageUrl(SERVER + "/images/display/d1.png"); 
+        p1.setTransparentImageUrl(SERVER + "/images/transparent/t1.png"); 
 
-        // 2. CREAR PRODUCTO 2 (Pantalón)
+        // Producto 2: Pantalón
         Product p2 = new Product();
         p2.setName("Cargo Pants Black");
         p2.setDescription("Pantalón táctico con cintas ajustables.");
@@ -50,29 +54,29 @@ public class DataSeeder implements CommandLineRunner {
         p2.setFashionType("TECHWEAR");
         p2.setSizes("28,30,32,34");
         
-        // CORRECCIÓN AQUÍ TAMBIÉN
-        p2.setDisplayImageUrl(SERVER + "/images/display/pants_model.jpg");
-        p2.setTransparentImageUrl(SERVER + "/images/transparent/pants_png.png");
+        p2.setDisplayImageUrl(SERVER + "/images/display/d2.png");
+        p2.setTransparentImageUrl(SERVER + "/images/transparent/t2.png");
 
-        // Guardamos los productos
+        // Guardamos los productos en la base de datos
         List<Product> savedProducts = productRepository.saveAll(List.of(p1, p2));
 
-      // ... código anterior ...
-
-        // 3. CREAR UN REEL
+        // -----------------------------------------------------------
+        // 3. CREAR REEL (TIKTOK SECTION)
+        // -----------------------------------------------------------
         Reel r1 = new Reel();
         
-        // CORRECCIÓN: Cambiamos "video1.mp4" por "reel1.mp4"
+        // CORRECCIÓN CLAVE: Usamos la URL completa para que Angular lo encuentre
         r1.setVideoUrl(SERVER + "/videos/reel1.mp4"); 
         
         r1.setDescription("Outfit check para salir el viernes 🔥 #techwear");
         r1.setFashionType("URBAN");
+        
+        // Etiquetamos los productos que creamos arriba
         r1.setTaggedProducts(savedProducts); 
 
+        // Guardamos el Reel
         reelRepository.save(r1);
 
-        System.out.println("-------> ¡BASE DE DATOS ARREGLADA Y CARGADA! <-------");
-
-// ... resto del código ...
+        System.out.println("-------> ¡BASE DE DATOS ARREGLADA Y CARGADA CORRECTAMENTE! <-------");
     }
 }
