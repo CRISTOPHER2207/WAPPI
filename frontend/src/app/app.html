@@ -2,16 +2,16 @@
 
 <nav class="bottom-nav">
 
-  <a routerLink="/reels" routerLinkActive="active" class="nav-item">
-    <i class='bx bx-play-circle'></i>
-  </a>
-
-  <a routerLink="/home" class="nav-item">
-    <i class='bx bx-play-circle'></i>
+  <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+    <i class='bx bx-home-alt-2'></i>
   </a>
 
   <a routerLink="/marketplace" routerLinkActive="active" class="nav-item">
     <i class='bx bx-store-alt'></i>
+  </a>
+
+  <a routerLink="/reels" routerLinkActive="active" class="nav-item">
+    <i class='bx bx-play-circle'></i>
   </a>
 
   <a routerLink="/create" routerLinkActive="active" class="nav-item">

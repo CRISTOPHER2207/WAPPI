@@ -57,15 +57,22 @@ public class DataSeeder implements CommandLineRunner {
         // Guardamos los productos
         List<Product> savedProducts = productRepository.saveAll(List.of(p1, p2));
 
-        // 3. CREAR UN REEL (Opcional por ahora, pero bueno para la estructura)
+      // ... código anterior ...
+
+        // 3. CREAR UN REEL
         Reel r1 = new Reel();
-        r1.setVideoUrl(SERVER + "/videos/video1.mp4");
+        
+        // CORRECCIÓN: Cambiamos "video1.mp4" por "reel1.mp4"
+        r1.setVideoUrl(SERVER + "/videos/reel1.mp4"); 
+        
         r1.setDescription("Outfit check para salir el viernes 🔥 #techwear");
         r1.setFashionType("URBAN");
-        r1.setTaggedProducts(savedProducts); // Etiquetamos la ropa en el video
+        r1.setTaggedProducts(savedProducts); 
 
         reelRepository.save(r1);
 
         System.out.println("-------> ¡BASE DE DATOS ARREGLADA Y CARGADA! <-------");
+
+// ... resto del código ...
     }
 }
