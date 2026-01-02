@@ -1,65 +1,36 @@
 <div class="reels-container">
 
-  <div *ngIf="reels.length === 0" class="empty-state">
-    <i class='bx bx-loader-alt bx-spin'></i>
-    <p>Cargando Reels...</p>
-    <small>Si no carga, revisa tu Backend</small>
-  </div>
+  <div class="video-card" *ngFor="let reel of reels">
 
-  <div class="reel-screen" *ngFor="let reel of reels">
+    <div class="video-wrapper">
 
-    <video
-      [src]="reel.safeUrl"
-      class="video-player"
-      autoplay
-      loop
-      muted
-      playsinline
-      onloadedmetadata="this.muted = true; this.play()">
-    </video>
+      <video
+        [src]="reel.safeUrl"
+        class="video-player"
+        autoplay
+        loop
+        muted
+        [muted]="true"
+        playsinline
+        controls
+        oncanplay="this.play()"
+        onloadedmetadata="this.muted = true;">
+        Tu navegador no soporta videos.
+      </video>
 
-    <div class="overlay"></div>
-
-    <div class="actions-sidebar">
-        <div class="action-btn">
-            <i class='bx bxs-heart'></i>
-            <span>24.5K</span>
-        </div>
-        <div class="action-btn">
-            <i class='bx bxs-message-rounded-dots'></i>
-            <span>104</span>
-        </div>
-        <div class="action-btn">
-            <i class='bx bxs-share'></i>
-            <span>Share</span>
-        </div>
-    </div>
-
-    <div class="bottom-info">
-      <h3 class="username">@wappi_style <i class='bx bxs-check-circle verified'></i></h3>
-
-      <p class="description">
-        {{ reel.description || 'Outfit check para el fin de semana 🔥' }}
-      </p>
-
-      <div class="music-track">
-        <i class='bx bxs-music'></i>
-        <marquee>Sonido original - Wappi Trends</marquee>
+      <div class="overlay">
+        <p class="description">{{ reel.description }}</p>
+        <button class="try-btn" (click)="tryOutfit(reel.taggedProducts)">
+          Probar Outfit <i class='bx bx-t-shirt'></i>
+        </button>
       </div>
 
-      <button class="shop-look-btn" (click)="goToCreator(reel.taggedProducts)">
-        <div class="icon-box">
-          <i class='bx bx-shopping-bag'></i>
-        </div>
-        <span class="btn-text">
-          Probar este Outfit
-          <span class="count" *ngIf="reel.taggedProducts?.length">
-            ({{reel.taggedProducts.length}} prendas)
-          </span>
-        </span>
-        <i class='bx bx-chevron-right arrow'></i>
-      </button>
     </div>
 
   </div>
+
+  <div *ngIf="reels.length === 0" class="loading">
+    <p>Cargando estilos...</p>
+  </div>
+
 </div>

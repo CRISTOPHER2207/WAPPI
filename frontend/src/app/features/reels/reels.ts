@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-// 1. IMPORTAR DomSanitizer y SafeUrl
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ReelService } from '../../services/reel';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser'; // <--- IMPORTANTE
+import { HttpClientModule } from '@angular/common/http';
 import { OutfitStateService } from '../../services/outfit-state';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reels',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HttpClientModule],
   templateUrl: './reels.html',
   styleUrls: ['./reels.scss']
 })
@@ -18,54 +18,30 @@ export class ReelsComponent implements OnInit {
 
   constructor(
     private reelService: ReelService,
-    private outfitStateService: OutfitStateService,
-    private router: Router,
-    private sanitizer: DomSanitizer // 2. INYECTAR EL SANITIZER
+    private sanitizer: DomSanitizer, // <--- Inyectamos el sanitizador
+    private outfitState: OutfitStateService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.reelService.getReels().subscribe({
       next: (data: any[]) => {
-        if (data && data.length > 0) {
-          // 3. LA CLAVE: Convertimos cada URL normal en una "SafeUrl"
-          this.reels = data.map(reel => ({
-            ...reel,
-            // bypassSecurityTrustUrl le dice a Angular: "Este link es seguro"
-            safeUrl: this.sanitizer.bypassSecurityTrustUrl(reel.videoUrl)
-          }));
-          console.log('✅ Reels seguros:', this.reels);
-        } else {
-          this.loadMockReels();
-        }
+        console.log('Datos recibidos de Supabase:', data);
+
+        // Procesamos cada reel para "limpiar" la URL
+        this.reels = data.map(reel => ({
+          ...reel,
+          // Esto le dice a Angular: "Confía en esta URL, es segura"
+          safeUrl: this.sanitizer.bypassSecurityTrustUrl(reel.videoUrl)
+        }));
       },
-      error: (err: any) => {
-        console.error('❌ Error, usando backup:', err);
-        this.loadMockReels();
-      }
+      error: (err) => console.error('Error cargando reels:', err)
     });
   }
 
-  loadMockReels() {
-    this.reels = [
-      {
-        id: 99,
-        videoUrl: 'https://cdn.coverr.co/videos/coverr-walking-in-a-fashion-show-2656/1080p.mp4',
-        description: 'Modo prueba activado 🚀',
-        taggedProducts: []
-      }
-    ].map(reel => ({
-        ...reel,
-        // También sanitizamos el mock por si acaso
-        safeUrl: this.sanitizer.bypassSecurityTrustUrl(reel.videoUrl)
-    }));
-  }
-
-  goToCreator(taggedProducts: any[]) {
-    if (taggedProducts && taggedProducts.length > 0) {
-        this.outfitStateService.setProductsToTry(taggedProducts);
-        this.router.navigate(['/create']);
-    } else {
-        alert("Este reel no tiene prendas etiquetadas");
-    }
+  // Función para ir al probador
+  tryOutfit(products: any[]) {
+    this.outfitState.setProductsToTry(products);
+    this.router.navigate(['/outfit-creator']);
   }
 }

@@ -13,9 +13,9 @@ public class DataSeeder implements CommandLineRunner {
 
     private final ProductRepository productRepository;
     private final ReelRepository reelRepository;
-    
-    // Tu servidor local (Asegúrate de que Spring Boot corra en el puerto 8080)
-    private final String SERVER = "http://localhost:8080";
+
+    // Tu URL de Supabase (Asegúrate que el bucket sea PUBLICO)
+    private final String BUCKET = "https://wajmjudpzatpimyridep.supabase.co/storage/v1/object/public/wappi-content";
 
     public DataSeeder(ProductRepository productRepository, ReelRepository reelRepository) {
         this.productRepository = productRepository;
@@ -24,59 +24,41 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // 1. Limpiamos la base de datos previa para evitar duplicados
+        // Borramos datos viejos para no repetir
         reelRepository.deleteAll();
         productRepository.deleteAll();
 
-        // -----------------------------------------------------------
-        // 2. CREAR PRODUCTOS
-        // -----------------------------------------------------------
-
-        // Producto 1: Polo
+        // --- 1. LAS PRENDAS (En carpeta images) ---
         Product p1 = new Product();
-        p1.setName("Polo Oversize Graphic");
-        p1.setDescription("Algodón 100%, estampado DTG de alta calidad.");
-        p1.setPrice(55.00);
-        p1.setCategory("SUPERIOR");
-        p1.setFashionType("URBAN"); 
-        p1.setSizes("S,M,L,XL");
-        
-        // Apuntamos a las imágenes que SÍ existen en tu carpeta static/images
-        p1.setDisplayImageUrl(SERVER + "/images/display/d1.png"); 
-        p1.setTransparentImageUrl(SERVER + "/images/transparent/t1.png"); 
+        p1.setName("Wappi Oversize Tee");
+        p1.setPrice(45.00);
+        p1.setSizes("S,M,L");
+        p1.setDisplayImageUrl(BUCKET + "/images/d1.png"); 
+        p1.setTransparentImageUrl(BUCKET + "/images/t1.png"); 
+        // Llenamos datos mínimos obligatorios
+        p1.setDescription("Polo básico"); p1.setCategory("SUPERIOR"); p1.setFashionType("URBAN");
 
-        // Producto 2: Pantalón
         Product p2 = new Product();
         p2.setName("Cargo Pants Black");
-        p2.setDescription("Pantalón táctico con cintas ajustables.");
-        p2.setPrice(120.00);
-        p2.setCategory("INFERIOR");
-        p2.setFashionType("TECHWEAR");
-        p2.setSizes("28,30,32,34");
-        
-        p2.setDisplayImageUrl(SERVER + "/images/display/d2.png");
-        p2.setTransparentImageUrl(SERVER + "/images/transparent/t2.png");
+        p2.setPrice(99.90);
+        p2.setSizes("30,32,34");
+        p2.setDisplayImageUrl(BUCKET + "/images/d2.png");
+        p2.setTransparentImageUrl(BUCKET + "/images/t2.png");
+        p2.setDescription("Pantalón cargo"); p2.setCategory("INFERIOR"); p2.setFashionType("URBAN");
 
-        // Guardamos los productos en la base de datos
-        List<Product> savedProducts = productRepository.saveAll(List.of(p1, p2));
+        List<Product> ropas = productRepository.saveAll(List.of(p1, p2));
 
-        // -----------------------------------------------------------
-        // 3. CREAR REEL (TIKTOK SECTION)
-        // -----------------------------------------------------------
+        // --- 2. EL VIDEO (En carpeta videos) ---
         Reel r1 = new Reel();
-        
-        // CORRECCIÓN CLAVE: Usamos la URL completa para que Angular lo encuentre
-        r1.setVideoUrl(SERVER + "/videos/reel1.mp4"); 
-        
-        r1.setDescription("Outfit check para salir el viernes 🔥 #techwear");
+        r1.setDescription("Outfit urbano 2025 🔥");
         r1.setFashionType("URBAN");
-        
-        // Etiquetamos los productos que creamos arriba
-        r1.setTaggedProducts(savedProducts); 
+        r1.setVideoUrl(BUCKET + "/videos/reel1.mp4"); // <--- AQUÍ CARGA EL VIDEO
 
-        // Guardamos el Reel
+        // --- 3. VINCULACIÓN ---
+        r1.setTaggedProducts(ropas); // <--- AQUÍ SE UNEN AL VIDEO
+
         reelRepository.save(r1);
 
-        System.out.println("-------> ¡BASE DE DATOS ARREGLADA Y CARGADA CORRECTAMENTE! <-------");
+        System.out.println("✅ ¡LISTO! Video de Supabase cargado y vinculado.");
     }
 }
